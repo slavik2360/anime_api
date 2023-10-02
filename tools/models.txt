@@ -1,0 +1,35 @@
+# Anime API
+#
+Artist
+    1 Artist 1 User
+    nickname
+    gender
+
+Band
+    1 Band 1 Artist
+    1 Band много Artist
+    title (nullable)
+    datetime_created
+    datetime_updated
+    datetime_deleted
+    followers
+    country
+
+Album
+    1 Band много Album
+    release_year
+    logo
+    title
+    status
+
+Genre
+    title
+
+Song
+    1 Album много Song
+    title
+    audio_file
+    duration
+    genre
+    times_played
+    # может быть соавторов (feat)
