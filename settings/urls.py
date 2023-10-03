@@ -22,11 +22,15 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
+from anime.views import AnimeViewSet
+
+router = DefaultRouter()
+router.register(r'animes', AnimeViewSet, basename='animes')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    # path('', include(router.urls))
+    path('', include(router.urls))
 ]
 
 

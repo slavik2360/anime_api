@@ -2,8 +2,8 @@
 import datetime
 # django
 from django.db import models
-from django.contrib.auth.models import User
-# from apps.auths.models import MyUser
+# from django.contrib.auth.models import User
+from auths.models import MyUser
 
 
 class Genre(models.Model):
@@ -62,8 +62,8 @@ class Anime(models.Model):
         verbose_name_plural = 'аниме'
 
     def __str__(self) -> str:
-        rate = self.rate * '☆'
-        return f"{self.title} | {self.rate}"
+        rate_star = int(self.rate) * '☆'
+        return f"{self.title} | {rate_star}"
 
 
 class VideoFileType(models.Model):
@@ -87,10 +87,9 @@ class Comment(models.Model):
     """
     Комментарии к Аниме
     """
-    
     user = models.ForeignKey(
         verbose_name='кто оставил',
-        to=User,
+        to=MyUser,
         related_name='comments',
         on_delete=models.CASCADE
     )
@@ -113,4 +112,4 @@ class Comment(models.Model):
         verbose_name_plural = 'комментарии'
 
     def __str__(self) -> str:
-        return f'{self.user.username} | {self.anime.title}'
+        return f'{self.user.nickname} | {self.anime.title}'
