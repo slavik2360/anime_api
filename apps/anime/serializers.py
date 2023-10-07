@@ -5,67 +5,80 @@ from rest_framework import serializers
 from .models import (
     Genre,
     Anime,
-    VideoFileType,
+    Season,
+    Episode,
     Comment,
 )
+from auths.models import MyUser
+
 
 class GenreSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField()
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField()
+
 
 class GenreCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model= Genre
-        fields = [
-            'name'
-        ]
-    
+        fields = '__all__'
 
+
+class EpisodeSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    episode_number = serializers.IntegerField()
+    title = serializers.CharField(max_length=120)
+    video = serializers.FileField()
+
+
+class EpisodeCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Episode
+        fields = '__all__'
+
+
+class SeasonSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    season_number = serializers.IntegerField()
+    episodes = EpisodeSerializer(many=True)
+
+
+class SeasonCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Season
+        fields = '__all__'
+
+    
 class AnimeSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    title = serializers.CharField()
-    description = serializers.CharField()
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField(max_length=150)
+    description = serializers.CharField(max_length=300)
     rate = serializers.FloatField()
     poster = serializers.ImageField()
-    video = serializers.FileField()
-    genres = serializers.IntegerField()
+    genres = GenreSerializer(many=True)
+    season = SeasonSerializer(many=True)
 
 
 class AnimeCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model= Anime
-        fields = [
-            'title',
-            'description',
-            'rate',
-            'poster',
-            'video',
-            'genres'
-        ]
+        fields = '__all__'
 
-class VideoTupeSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    name = serializers.CharField()
-
-class VideoTupeCreateSerializer(serializers.Serializer):
-    class Meta:
-        model= VideoFileType
-        fields = [
-            'name'
-        ]
 
 class CommentSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
-    user = serializers.IntegerField()
-    text = serializers.CharField()
-    anime = serializers.IntegerField()
+    id = serializers.IntegerField(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=MyUser.objects.all()
+    )
+    text = serializers.CharField(
+        max_length=254
+    )
+    anime_id = serializers.PrimaryKeyRelatedField(
+        queryset=Anime.objects.all()
+    )
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model= Comment
-        fields = [
-            'user',
-            'text',
-            'anime'
-        ]
+        fields = '__all__'
+

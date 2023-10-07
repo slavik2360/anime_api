@@ -1,22 +1,31 @@
 # DRF
 from rest_framework import serializers
+from django.core.validators import EmailValidator
 
 #local
 from auths.models import MyUser
+from abstracts.utils import validate_mail
 
 
 class MyUserSerializer(serializers.Serializer):
-    id = serializers.IntegerField()
+    """
+    Cериалайзер пользователя.
+    """
+    id = serializers.IntegerField(read_only=True)
     email = serializers.EmailField()
-    nickname = serializers.CharField()
-    is_staff = serializers.BooleanField()
+    nickname = serializers.CharField(max_length=120)
 
-
-class MyUserCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model= MyUser
-        fields = [
-            'email',
-            'nickname',
-            'is_staff'
-        ]
+    def validate_email(self, value: str):
+        """
+        Кастом валидация email.
+        """
+        if validate_mail(value) != "GOOD":
+            raise serializers.ValidationError('Неверный формат адреса электронной почты.')
+        return value
+    
+    def create(self, validated_data):
+        self.is_valid(raise_exception=True)
+        validated_data = self.validated_data
+        validated_data['email'] = self.validate_email(validated_data['email'])
+        my_user = MyUser.objects.create(**validated_data)
+        return my_user

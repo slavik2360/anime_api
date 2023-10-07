@@ -1,32 +1,32 @@
+# DRF
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
-from .models import (
-    Genre,
-    Anime,
-    VideoFileType,
-    Comment,
-)
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
+# LOCAL
+from .models import (
+    Genre,
+    Season,
+    Episode,
+    Anime,
+    Comment
+)
 from .serializers import(
    GenreSerializer,
    GenreCreateSerializer,
    AnimeSerializer,
    AnimeCreateSerializer,
-   VideoTupeSerializer,
-   VideoTupeCreateSerializer,
    CommentSerializer,
    CommentCreateSerializer
 )
-from rest_framework.exceptions import ValidationError
-
-
-from .models import Anime
-from .serializers import AnimeSerializer, AnimeCreateSerializer
 
 
 
 class AnimeViewSet(viewsets.ViewSet):
+    """
+    ViewSet for Anime model.
+    """
     queryset = Anime.objects.all()
 
     def list(

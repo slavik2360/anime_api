@@ -8,7 +8,8 @@ from django.contrib import admin
 from .models import (
     Genre,
     Anime,
-    VideoFileType,
+    Season,
+    Episode,
     Comment,
 )
 
@@ -29,13 +30,19 @@ class AnimeAdmin(admin.ModelAdmin):
     readonly_fields = ()
 
 
-@admin.register(VideoFileType)
-class AudioFileTypeAdmin(admin.ModelAdmin):
+@admin.register(Season)
+class SeasonTypeAdmin(admin.ModelAdmin):
     """
-    VideoFileTypeAdmin admin.
+    SeasonAdmin admin.
     """
     readonly_fields = ()
 
+@admin.register(Episode)
+class EpisodeAdmin(admin.ModelAdmin):
+    """
+    EpisodeAdmin admin.
+    """
+    readonly_fields = ()
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):

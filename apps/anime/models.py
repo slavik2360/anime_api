@@ -1,31 +1,41 @@
 # Python
 import datetime
+
 # django
 from django.db import models
-# from django.contrib.auth.models import User
+# from django_extensions.db.fields import FileTypeField, FileTypeValidator
+# from django_extensions.validators import FileTypeField, FileTypeValidator
+from django.core.validators import FileExtensionValidator
+
+
+#Local
 from auths.models import MyUser
 
 
 class Genre(models.Model):
-    """Аниме жанры"""
+    """
+    Model Anime Genre.
+    """
 
-    name = models.CharField(
+    title = models.CharField(
         verbose_name='название жанра',
         max_length=130,
         unique=True
     )
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('title',)
         verbose_name = 'жанр'
         verbose_name_plural = 'жанры'
 
     def __str__(self) -> str:
-        return self.name
+        return self.title
 
 
 class Anime(models.Model):
-    """МОДЕЛЬ АНИМЕ"""
+    """
+    Model Anime.
+    """
 
     title: str = models.CharField(
         verbose_name='название аниме',
@@ -42,13 +52,15 @@ class Anime(models.Model):
     poster: str = models.ImageField(
         verbose_name='постер',
         upload_to='posters',
-        null=True
-    )
-    video: str = models.FileField(
-        verbose_name='видео',
-        upload_to='videos/%Y/',
+        validators=[FileExtensionValidator(
+            allowed_extensions=[
+                'png', 'jpg', 'jpeg',
+                'gif'
+            ],
+            message='Sorry, this file format is not supported'
+        )],
         null=True,
-        blank=True   
+        blank=True
     )
     genres = models.ManyToManyField(
         verbose_name='жанры',
@@ -66,26 +78,73 @@ class Anime(models.Model):
         return f"{self.title} | {rate_star}"
 
 
-class VideoFileType(models.Model):
+class Season(models.Model):
     """
-    Модель для хранения типов расширений видео-файлов.
+    Model Anime Season.
     """
-    name: models.CharField = models.CharField(
-        verbose_name='название',
-        max_length=10
+    anime = models.ForeignKey(
+        to=Anime, 
+        verbose_name='какое аниме',
+        related_name='seasons', 
+        on_delete=models.CASCADE
+    )
+    season_number = models.IntegerField(
+        verbose_name='какой сезон аниме'
     )
 
     class Meta:
-        verbose_name = 'тип расширения видео-файла'
-        verbose_name_plural = 'типы расширений видео-файлов'
+        ordering = ('anime',)
+        verbose_name = 'сезон'
+        verbose_name_plural = 'сезоны'
 
-    def __str__(self):
-        return f'Расширение: {self.name}'
+    def __str__(self) -> str:
+        return f'{self.anime.title} | сезон: {self.season_number}'
+
+class Episode(models.Model):
+    """
+    Model Anime Episode.
+    """
+    season = models.ForeignKey(
+        to=Season,
+        related_name='episodes', 
+        on_delete=models.CASCADE
+    )
+    episode_number: int = models.IntegerField(
+        verbose_name='номер эпизода'
+    )
+    title: str = models.CharField(
+        verbose_name='название эпизода',
+        max_length=120
+    )
+    video: str = models.FileField(
+        verbose_name='видео',
+        upload_to='videos/%Y/',
+        validators=[FileExtensionValidator(
+            allowed_extensions=[
+                'mp4', 'avi', 'mkv',
+                'mov',
+                # для теста 
+                'png', 'jpg', 'jpeg',
+                'gif', 'svg'
+            ],
+            message='Sorry, this file format is not supported'
+        )],
+        null=True,
+        blank=True   
+    )
+    
+    class Meta:
+        ordering = ('-id',)
+        verbose_name = 'серии'
+        verbose_name_plural = 'серии'
+
+    def __str__(self) -> str:
+        return f'{self.season.anime.title} | серия: {self.episode_number}'
 
 
 class Comment(models.Model):
     """
-    Комментарии к Аниме
+    Model Comment to Anime.
     """
     user = models.ForeignKey(
         verbose_name='кто оставил',
@@ -113,3 +172,21 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f'{self.user.nickname} | {self.anime.title}'
+    
+
+
+# class VideoFileType(models.Model):
+#     """
+#     Модель для хранения типов расширений видео-файлов.
+#     """
+#     name: models.CharField = models.CharField(
+#         verbose_name='название',
+#         max_length=10
+#     )
+
+#     class Meta:
+#         verbose_name = 'тип расширения видео-файла'
+#         verbose_name_plural = 'типы расширений видео-файлов'
+
+#     def __str__(self):
+#         return f'Расширение: {self.name}'

@@ -18,14 +18,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-
 from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
 from anime.views import AnimeViewSet
+from auths.views import MyUserViewSet
 
 router = DefaultRouter()
-router.register(r'animes', AnimeViewSet, basename='animes')
+router.register(r'animes', AnimeViewSet, basename='anime')
+router.register(r'users', MyUserViewSet, basename='user')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
