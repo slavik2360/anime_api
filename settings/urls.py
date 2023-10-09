@@ -22,10 +22,13 @@ from rest_framework.routers import DefaultRouter
 
 from anime.views import AnimeViewSet
 from auths.views import MyUserViewSet
+from anime.views import AnimeSearchViewSet
 
 router = DefaultRouter()
 router.register(r'animes', AnimeViewSet, basename='anime')
 router.register(r'users', MyUserViewSet, basename='user')
+router.register(r'serch', AnimeSearchViewSet, basename='search')
+
 
 
 urlpatterns = [
