@@ -156,6 +156,7 @@ class AnimeSearchViewSet(viewsets.ViewSet):
         srch = request.query_params.get('srch', None)
         rate = request.query_params.get('rate', None)
 
+
         if srch is not None:
             self.queryset = self.queryset.filter(title__contains=srch)
         if rate is not None:
