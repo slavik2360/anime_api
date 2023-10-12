@@ -5,6 +5,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.models.functions import Lower
+from django.db.models import Q
 # LOCAL
 from .models import (
     Genre,
@@ -139,8 +140,6 @@ class AnimeViewSet(viewsets.ViewSet):
             raise ValidationError('Anime with such an ID does not exist',code=404)
         
 
-
-
 class AnimeSearchViewSet(viewsets.ViewSet):
     """
     ViewSet Search name Anime for Game model.
@@ -156,9 +155,9 @@ class AnimeSearchViewSet(viewsets.ViewSet):
         srch = request.query_params.get('srch', None)
         rate = request.query_params.get('rate', None)
 
-
         if srch is not None:
-            self.queryset = self.queryset.filter(title__contains=srch)
+            self.queryset = self.queryset.filter(Q(title__iexact=srch) | Q(title__icontains=srch))
+
         if rate is not None:
             if 'min' in rate:
                 self.queryset = self.queryset.order_by('-rate')

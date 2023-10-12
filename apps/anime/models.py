@@ -36,6 +36,8 @@ class Anime(models.Model):
     """
     Model Anime.
     """
+    def default_poster():
+        return '/default/poster.jpg'
 
     title: str = models.CharField(
         verbose_name='название аниме',
@@ -59,7 +61,7 @@ class Anime(models.Model):
             ],
             message='Sorry, this file format is not supported'
         )],
-        null=True,
+        default=default_poster(),
         blank=True
     )
     genres = models.ManyToManyField(
@@ -69,7 +71,7 @@ class Anime(models.Model):
     )
 
     class Meta:
-        ordering = ('-rate',)
+        ordering = ('-id',)
         verbose_name = 'аниме'
         verbose_name_plural = 'аниме'
 

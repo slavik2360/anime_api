@@ -54,7 +54,7 @@ class AnimeSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=300)
     rate = serializers.FloatField()
     poster = serializers.ImageField()
-    # genres = GenreSerializer(many=True)
+    genres = GenreSerializer(many=True)
     # season = SeasonSerializer(many=True)
 
 
