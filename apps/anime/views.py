@@ -40,13 +40,13 @@ class AnimeViewSet(viewsets.ViewSet,):
         *args:tuple,
         **kwargs:dict
     )->Response:
-        serializer = AnimeSerializer(
-            instance=self.queryset, 
-            many=True
-        )
-        return Response(
-            data=serializer.data
-        )
+            serializer = AnimeSerializer(
+                instance=self.queryset, 
+                many=True
+            )
+            return Response(
+                data=serializer.data
+            )
 
     def retrieve(
         self,
