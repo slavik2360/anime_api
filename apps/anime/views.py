@@ -1,3 +1,5 @@
+# Python
+from typing import Optional
 # DRF
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
@@ -14,6 +16,7 @@ from .models import (
     Anime,
     Comment
 )
+from abstracts.mixins import CustomValidationException
 from .serializers import(
    GenreSerializer,
    GenreCreateSerializer,
@@ -25,7 +28,7 @@ from .serializers import(
 
 
 
-class AnimeViewSet(viewsets.ViewSet):
+class AnimeViewSet(viewsets.ViewSet,):
     """
     ViewSet for Anime model.
     """
@@ -48,14 +51,12 @@ class AnimeViewSet(viewsets.ViewSet):
     def retrieve(
         self,
         request:Request,
-        pk = None,
-        *args:tuple,
-        **kwargs:dict
+        pk: Optional[int] = None
     )->Response:
         try:
-            anime = get_object_or_404(self.queryset, pk=pk)
+            anime = Anime.objects.get(id=pk)
         except Anime.DoesNotExist:
-            raise ValidationError('Anime with such an ID does not exist',code=404)
+            raise CustomValidationException(detail=f'Anime with such an {pk} does not exist', code=400)
         serializer = AnimeSerializer(anime)
         return Response(
             data=serializer.data
@@ -80,7 +81,7 @@ class AnimeViewSet(viewsets.ViewSet):
     def update(
         self,
         request:Request,
-        pk = None,
+        pk: Optional[int] = None,
         *args:tuple,
         **kwargs:dict
     )->Response:
@@ -101,7 +102,7 @@ class AnimeViewSet(viewsets.ViewSet):
     def partial_update(
         self,
         request:Request,
-        pk = None,
+        pk: Optional[int] = None,
         *args:tuple,
         **kwargs:dict
     )->Response:
@@ -123,7 +124,7 @@ class AnimeViewSet(viewsets.ViewSet):
     def destroy(
         self,
         request:Request,
-        pk = None,
+        pk: Optional[int] = None,
         *args:tuple,
         **kwargs:dict
     )->Response:
@@ -137,7 +138,7 @@ class AnimeViewSet(viewsets.ViewSet):
                 }
             )
         except anime.DoesNotExist:
-            raise ValidationError('Anime with such an ID does not exist',code=404)
+            raise CustomValidationException(detail=f'Anime with such an {pk} does not exist', code=400)
         
 
 class AnimeSearchViewSet(viewsets.ViewSet):
