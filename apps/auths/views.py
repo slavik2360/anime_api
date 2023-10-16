@@ -5,6 +5,10 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.db.utils import IntegrityError
+from rest_framework.permissions import (
+    IsAuthenticated,
+    BasePermission
+)
 
 #LOCAL
 from auths.models import MyUser
@@ -16,6 +20,7 @@ class MyUserViewSet(viewsets.ViewSet):
     ViewSet for MyUser model.
     """
     queryset = MyUser.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def list(
         self,

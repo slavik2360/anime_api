@@ -1,0 +1,47 @@
+[33mcommit 27bef2854b9d6842037cb1443cbc1b8d6dbb4f61[m[33m ([m[1;36mHEAD -> [m[1;32mslv[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: slavik2360 <slavik2360@bk.ru>
+Date:   Mon Oct 16 14:38:39 2023 +0600
+
+    mixin error
+
+[33mcommit 3551e7c84038e60238fb42869459bede0778533f[m
+Author: slavik2360 <slavik2360@bk.ru>
+Date:   Thu Oct 12 13:43:31 2023 +0600
+
+    generate
+
+[33mcommit da9b8d071e03f1ccbb4940cad82b2ad68ab28bfb[m
+Author: Вячеслав Блощенко <БлощенкоВ@itstep.krg>
+Date:   Tue Oct 10 21:12:29 2023 +0600
+
+    generate
+
+[33mcommit 7620c9b52b673e1188e0208b1d4c23265a09802a[m
+Author: Вячеслав Блощенко <БлощенкоВ@itstep.krg>
+Date:   Mon Oct 9 20:49:29 2023 +0600
+
+    Search
+
+[33mcommit 6ef1ccf26860b915a30d4c492bca14218bc60283[m
+Author: slavik2360 <slavik2360@bk.ru>
+Date:   Sat Oct 7 15:26:28 2023 +0600
+
+    replace model
+
+[33mcommit d5dad4c219d6abba5b783a895eefaa065a756d89[m
+Author: slavik2360 <slavik2360@bk.ru>
+Date:   Tue Oct 3 21:04:49 2023 +0600
+
+    crud
+
+[33mcommit 0ff33f7d107e5ba2f2971c35989e42356fee8015[m
+Author: slavik2360 <slavik2360@bk.ru>
+Date:   Mon Oct 2 22:24:35 2023 +0600
+
+    first commit
+
+[33mcommit 96fb1b72fe52602a4ec601dd66361150ed7986c5[m
+Author: Вячеслав Блощенко <БлощенкоВ@itstep.krg>
+Date:   Mon Oct 2 21:17:17 2023 +0600
+
+    first commit

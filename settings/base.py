@@ -35,6 +35,7 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 PROJECT_APPS = [    
     'anime.apps.AnimeConfig',
@@ -130,3 +131,11 @@ MEDIA_ROOT = 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'auths.MyUser'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+from settings.jwt import SIMPLE_JWT
