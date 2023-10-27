@@ -9,7 +9,7 @@ from rest_framework.exceptions import ValidationError
 from django.db.models.functions import Lower
 from django.db.models import Q
 # LOCAL
-from .models import (
+from anime.models import (
     Genre,
     Season,
     Episode,
