@@ -2,9 +2,9 @@
 from typing import Optional
 # DRF
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets
+from rest_framework.viewsets import ViewSet
 from rest_framework.request import Request
-from rest_framework.response import Response
+from rest_framework.response import Response as JsonResponse
 from rest_framework.exceptions import ValidationError
 from django.db.models.functions import Lower
 from django.db.models import Q
@@ -16,7 +16,8 @@ from .models import (
     Anime,
     Comment
 )
-from abstracts.mixins import CustomValidationException
+from abstracts.mixins import ResponseMixin, ObjectMixin
+from .permissions import AnimePermission
 from .serializers import(
    GenreSerializer,
    GenreCreateSerializer,
@@ -28,10 +29,13 @@ from .serializers import(
 
 
 
-class AnimeViewSet(viewsets.ViewSet,):
+class AnimeViewSet(ViewSet, ResponseMixin, ObjectMixin):
     """
     ViewSet for Anime model.
     """
+    permission_classes = (
+        AnimePermission,
+    )
     queryset = Anime.objects.all()
 
     def list(
@@ -39,12 +43,12 @@ class AnimeViewSet(viewsets.ViewSet,):
         request:Request,
         *args:tuple,
         **kwargs:dict
-    )->Response:
+    )->JsonResponse:
         serializer = AnimeSerializer(
             instance=self.queryset, 
             many=True
         )
-        return Response(
+        return self.json_response(
             data=serializer.data
         )
 
@@ -52,74 +56,56 @@ class AnimeViewSet(viewsets.ViewSet,):
         self,
         request:Request,
         pk: Optional[int] = None
-    )->Response:
-        try:
-            anime = Anime.objects.get(id=pk)
-        except Anime.DoesNotExist:
-            raise CustomValidationException(detail=f'Anime with such an {pk} does not exist', code=400)
+    )->JsonResponse:
+        anime = self.get_object(self.queryset, pk)
         serializer = AnimeSerializer(anime)
-        return Response(
-            data=serializer.data
-        )
+        return self.json_response(serializer.data)
 
     def create(
         self,
         request:Request,
         *args:tuple,
         **kwargs:dict
-    )->Response:
+    )->JsonResponse:
         serializer = AnimeCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         anime: Anime = serializer.save()
-        return Response(
-            data={
-                'status':'ok',
-                'message':f'Anime {anime.title} is created!'
-            }
-        )
+        return self.json_response(f'{anime.title} is created. ID: {anime.id}')
 
     def update(
         self,
         request:Request,
-        pk: Optional[int] = None,
-        *args:tuple,
-        **kwargs:dict
-    )->Response:
-        anime = get_object_or_404(Anime, pk=pk)
+        pk: Optional[int] = None
+    )->JsonResponse:
+        anime = self.get_object(self.queryset, pk)
         serializer = AnimeCreateSerializer(
             instance=anime, 
             data=request.data
         )
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            return self.json_response(
+                f'{anime.title} wasn\'t updated', 'Warning'
+            )
         anime: Anime = serializer.save()
-        return Response(
-            data={
-                'status':'ok',
-                'message':f'Anime {anime.title} is updated!'
-            }
-        )
+        return self.json_response(f'{anime.title} was updated')
 
     def partial_update(
         self,
         request:Request,
-        pk: Optional[int] = None,
-        *args:tuple,
-        **kwargs:dict
-    )->Response:
-        anime = get_object_or_404(Anime, pk=pk)
+        pk: Optional[int] = None
+    ) -> JsonResponse:
+        anime = self.get_object(self.queryset, pk)
         serializer = AnimeCreateSerializer(
             instance=anime, 
             data=request.data, 
             partial=True
         )
-        serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            return self.json_response(
+                f'{anime.title} wasn\'t partially-updated', 'Warning'
+            )
         anime: Anime = serializer.save()
-        return Response(
-            data={
-                'status':'ok',
-                'message':f'Anime {anime.title} is partial_update!'
-            }
-        )
+        return self.json_response(f'{anime.title} was partially-updated')
 
     def destroy(
         self,
@@ -127,21 +113,15 @@ class AnimeViewSet(viewsets.ViewSet,):
         pk: Optional[int] = None,
         *args:tuple,
         **kwargs:dict
-    )->Response:
-        try:
-            anime = get_object_or_404(Anime, pk=pk)
-            anime.delete()
-            return Response(
-                data={
-                    'status':'ok',
-                    'message':f'Anime {anime.title} is partial_update!'
-                }
-            )
-        except anime.DoesNotExist:
-            raise CustomValidationException(detail=f'Anime with such an {pk} does not exist', code=400)
+    )->JsonResponse:
+        anime = self.get_object(self.queryset, pk)
+        name = anime.title
+        anime.delete()
+        return self.json_response(f'{name} was deleted')
+        
         
 
-class AnimeSearchViewSet(viewsets.ViewSet):
+class AnimeSearchViewSet(ViewSet):
     """
     ViewSet Search name Anime for Game model.
     """
@@ -152,7 +132,7 @@ class AnimeSearchViewSet(viewsets.ViewSet):
         request: Request,
         *args:tuple,
         **kwargs:dict
-    ) -> Response:
+    ) -> JsonResponse:
         srch = request.query_params.get('srch', None)
         rate = request.query_params.get('rate', None)
 
@@ -171,4 +151,4 @@ class AnimeSearchViewSet(viewsets.ViewSet):
                 many=True
             )
         
-        return Response(data=serializer.data)
+        return JsonResponse(data=serializer.data)
