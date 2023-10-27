@@ -138,4 +138,8 @@ REST_FRAMEWORK = {
     )
 }
 
+<<<<<<< HEAD
 from settings.jwt import SIMPLE_JWT
+=======
+from settings.jwt import SIMPLE_JWT  # noqa
+>>>>>>> 050cb8c (Permission)

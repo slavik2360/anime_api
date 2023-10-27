@@ -1,10 +1,22 @@
+<<<<<<< HEAD
 from datetime import timedelta
+=======
+# Python
+from datetime import timedelta
+
+# Django
+>>>>>>> 050cb8c (Permission)
 from django.conf import settings
 
 
 SIMPLE_JWT = {
+<<<<<<< HEAD
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=(30*1)),
+=======
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=100),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=100),
+>>>>>>> 050cb8c (Permission)
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,

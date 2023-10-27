@@ -34,6 +34,10 @@ class Command(BaseCommand):
             genres = Genre.objects.all()
             rate_float: float = random.uniform(1,10)
             rates: float = float('{:.2f}'.format(rate_float))
+<<<<<<< HEAD
+=======
+            # a = list(ANIME)
+>>>>>>> 050cb8c (Permission)
             an = ''.join(x for x in random.choice(list(ANIME)))
             try:
                 temp_anime: Anime = Anime.objects.create(
