@@ -2,10 +2,8 @@
 from typing import Any
 
 # DRF
-<<<<<<< HEAD
 from rest_framework.exceptions import APIException
 
-=======
 from rest_framework.response import Response as JsonResponse
 from rest_framework.validators import ValidationError
 from rest_framework.exceptions import APIException
@@ -14,7 +12,6 @@ from rest_framework.exceptions import APIException
 from django.db.models import query
 
 
->>>>>>> 050cb8c (Permission)
 
 
 # Django
@@ -32,8 +29,6 @@ class CustomValidationException(APIException):
             self.detail = detail
         if code is not None:
             self.code = code
-<<<<<<< HEAD
-=======
 
     def format_detail(self, *args, **kwargs):
         return self.detail.format(*args, **kwargs)
@@ -86,4 +81,4 @@ class ObjectMixin:
                 }
             )
         return obj
->>>>>>> 050cb8c (Permission)
+
